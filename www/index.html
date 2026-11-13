@@ -75,8 +75,8 @@ label{display:block;font-size:13px;color:var(--mu);margin:6px 0 2px}input,select
   </div>
 
   <div class="card">
-    <div class="mu" id="lagNote"></div><label>Time (local clock)</label>
-    <div class="row"><input id="th" type="number" placeholder="hh" min="0" max="23"><input id="tm" type="number" placeholder="mm" min="0" max="59"><input id="ts" type="number" placeholder="ss" min="0" max="59"></div>
+    <div class="mu" id="lagNote"></div><label>Date & Time (UT/GMT)</label>
+    <div class="row"><input id="td" type="date" style="flex:2"><input id="th" type="number" placeholder="hh" min="0" max="23"><input id="tm" type="number" placeholder="mm" min="0" max="59"><input id="ts" type="number" placeholder="ss" min="0" max="59"></div>
     <label>Sextant altitude Hs (e.g. 84° 15.5')</label>
     <div class="row"><input id="hd" type="number" placeholder="degrees"><input id="hm" type="number" step="0.1" placeholder="minutes"></div>
 
@@ -825,7 +825,7 @@ function expect(){
   $('expNote').textContent = note;
 }
 
-function lagNote(){const t=new Date(cur);$('lagNote').textContent='The time '+S.set.lag+' seconds ago was '+t.toLocaleTimeString()+'.';$('th').value=t.getHours();$('tm').value=t.getMinutes();$('ts').value=t.getSeconds()}
+function lagNote(){const t=new Date(cur);$('lagNote').textContent='The time '+S.set.lag+' seconds ago was '+t.toISOString().slice(11,19)+' UT.';$('td').value=t.toISOString().slice(0,10);$('th').value=t.getUTCHours();$('tm').value=t.getUTCMinutes();$('ts').value=t.getUTCSeconds()}
 
 function render(){
   try {
@@ -1275,7 +1275,7 @@ function renderAlmanac() {
   let h = '<tr><th>UT</th><th>GHA</th>' + (showDec ? '<th>Dec</th>' : '') + '</tr>';
   for (let hour = 0; hour < 24; hour++) {
     const d = almBodyGha(baseMs + hour * 3600000, name); if (!d) continue;
-    h += `<tr><td>${String(hour).padStart(2, '0')}:00</td><td>${d.gha.toFixed(2)}°</td>`;
+    h += `<tr><td>${String(hour).padStart(2, '0')}:00</td><td>${fmtGHA(d.gha)}</td>`;
     if (showDec) h += `<td>${d.dec != null ? exDM(d.dec, 'lat') : '—'}</td>`;
     h += '</tr>';
   }
@@ -1289,7 +1289,7 @@ function almExactLookup() {
   const hh = +($('alm_h').value) || 0, mm = +($('alm_m').value) || 0, ss = +($('alm_s').value) || 0;
   const d = almBodyGha(baseMs + hh * 3600000 + mm * 60000 + ss * 1000, name);
   if (!d) { $('alm_exact').textContent = 'No data'; return; }
-  $('alm_exact').textContent = `GHA ${d.gha.toFixed(2)}°` + (d.dec != null ? ', Dec ' + exDM(d.dec, 'lat') : '');
+  $('alm_exact').textContent = `GHA ${fmtGHA(d.gha)}` + (d.dec != null ? ', Dec ' + exDM(d.dec, 'lat') : '');
 }
 function renderAlmanacStars() {
   const baseMs = almGetDate() || Date.UTC(new Date().getFullYear(), 6, 1);
@@ -1682,7 +1682,7 @@ function init(){
     $('aBtn').onclick=()=>show('help');
     $('revealBtn').onclick=()=>{ revealExpect = true; updateLevelUI(); expect(); };
     $('sightBtn').onclick=()=>{cur=Date.now()-S.set.lag*1000;timeTouched=true;lagNote();$('hd').focus()};
-    for(const id of['th','tm','ts'])$(id).onchange=()=>{const t=new Date(cur);t.setHours(+$('th').value||0,+$('tm').value||0,+$('ts').value||0);cur=t.getTime();timeTouched=true};
+    for(const id of['td','th','tm','ts'])$(id).onchange=()=>{const d=$('td').value.split('-');const t=new Date(Date.UTC(+d[0],+d[1]-1,+d[2],+$('th').value||0,+$('tm').value||0,+$('ts').value||0));cur=t.getTime();timeTouched=true};
 
     $('rf_on').onchange = () => {
       if ($('rf_on').checked) {
