@@ -75,7 +75,7 @@ label{display:block;font-size:13px;color:var(--mu);margin:6px 0 2px}input,select
   </div>
 
   <div class="card">
-    <div class="mu" id="lagNote"></div><label>Date & Time (UT/GMT)</label>
+    <div class="mu" id="lagNote"></div><label>Date & Time <span style="float:right;font-weight:normal"><input type="checkbox" id="ut_toggle" style="width:auto;margin-right:4px"> Use UT (GMT)</span></label>
     <div class="row"><input id="td" type="date" style="flex:2"><input id="th" type="number" placeholder="hh" min="0" max="23"><input id="tm" type="number" placeholder="mm" min="0" max="59"><input id="ts" type="number" placeholder="ss" min="0" max="59"></div>
     <label>Sextant altitude Hs (e.g. 84° 15.5')</label>
     <div class="row"><input id="hd" type="number" placeholder="degrees"><input id="hm" type="number" step="0.1" placeholder="minutes"></div>
@@ -400,7 +400,7 @@ const ACR=[
 ];
 
 let S={
-  set:{pm:'manual',mlat:'',mlon:'',lag:10,eye:3.5,ie:1.2,limb:'L',exp:15,showMidday:true,middayInFix:true,lvl:'auto',bubble:false,rfTrack:0,rfSpeed:0,rfOpenSession:null},
+  set:{pm:'manual',mlat:'',mlon:'',lag:10,eye:3.5,ie:1.2,limb:'L',exp:15,showMidday:true,middayInFix:true,lvl:'auto',bubble:false,rfTrack:0,rfSpeed:0,rfOpenSession:null,useUT:true},
   sights:[],sessions:[],last:null
 },gps=null,cur=Date.now()-10000,timeTouched=false,revealExpect=false;
 try{
@@ -825,7 +825,26 @@ function expect(){
   $('expNote').textContent = note;
 }
 
-function lagNote(){const t=new Date(cur);$('lagNote').textContent='The time '+S.set.lag+' seconds ago was '+t.toISOString().slice(11,19)+' UT.';$('td').value=t.toISOString().slice(0,10);$('th').value=t.getUTCHours();$('tm').value=t.getUTCMinutes();$('ts').value=t.getUTCSeconds()}
+function lagNote(){
+  const t = new Date(cur);
+  const isUT = S.set.useUT !== false;
+  if (isUT) {
+    $('lagNote').textContent = 'The time ' + S.set.lag + ' seconds ago was ' + t.toISOString().slice(11,19) + ' UT.';
+    $('td').value = t.toISOString().slice(0,10);
+    $('th').value = String(t.getUTCHours()).padStart(2,'0');
+    $('tm').value = String(t.getUTCMinutes()).padStart(2,'0');
+    $('ts').value = String(t.getUTCSeconds()).padStart(2,'0');
+  } else {
+    $('lagNote').textContent = 'The time ' + S.set.lag + ' seconds ago was ' + t.toLocaleTimeString() + ' Local.';
+    const yyyy = t.getFullYear();
+    const mm = String(t.getMonth()+1).padStart(2,'0');
+    const dd = String(t.getDate()).padStart(2,'0');
+    $('td').value = yyyy+'-'+mm+'-'+dd;
+    $('th').value = String(t.getHours()).padStart(2,'0');
+    $('tm').value = String(t.getMinutes()).padStart(2,'0');
+    $('ts').value = String(t.getSeconds()).padStart(2,'0');
+  }
+}
 
 function render(){
   try {
@@ -1620,6 +1639,7 @@ function load(){
     $('navMidday').style.display = st.showMidday ? '' : 'none';
     $('lvl').value = st.lvl;
     for(const k of['mlat','mlon','lag','eye','ie','limb','exp']) $(k).value=st[k];
+    $('ut_toggle').checked = st.useUT !== false;
 
     if(Array.isArray(S.sessions)){
       S.sessions.forEach(x => {
@@ -1681,8 +1701,20 @@ function init(){
     document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.p));
     $('aBtn').onclick=()=>show('help');
     $('revealBtn').onclick=()=>{ revealExpect = true; updateLevelUI(); expect(); };
+    $('ut_toggle').onchange = () => { S.set.useUT = $('ut_toggle').checked; save(); lagNote(); };
     $('sightBtn').onclick=()=>{cur=Date.now()-S.set.lag*1000;timeTouched=true;lagNote();$('hd').focus()};
-    for(const id of['td','th','tm','ts'])$(id).onchange=()=>{const d=$('td').value.split('-');const t=new Date(Date.UTC(+d[0],+d[1]-1,+d[2],+$('th').value||0,+$('tm').value||0,+$('ts').value||0));cur=t.getTime();timeTouched=true};
+    for(const id of['td','th','tm','ts'])$(id).onchange=()=>{
+  const d=$('td').value.split('-');
+  if(!d[0]) return;
+  const isUT = S.set.useUT !== false;
+  let t;
+  if(isUT) {
+    t=new Date(Date.UTC(+d[0],+d[1]-1,+d[2],+$('th').value||0,+$('tm').value||0,+$('ts').value||0));
+  } else {
+    t=new Date(+d[0],+d[1]-1,+d[2],+$('th').value||0,+$('tm').value||0,+$('ts').value||0);
+  }
+  cur=t.getTime();timeTouched=true;
+};
 
     $('rf_on').onchange = () => {
       if ($('rf_on').checked) {
