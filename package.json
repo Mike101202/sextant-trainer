@@ -1,0 +1,1 @@
+{ "name": "sextant-trainer", "version": "1.0.0", "description": "Offline sextant trainer", "dependencies": { "@capacitor/android": "^6.0.0", "@capacitor/core": "^6.0.0", "@capacitor/cli": "^6.0.0" } }
