@@ -22,9 +22,9 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
         
-    - name: Set up Android SDK
+    - name: Set Up Android SDK
       uses: android-actions/setup-android@v3
-      
+
     - name: Install dependencies
       run: npm install
       
@@ -36,8 +36,8 @@ jobs:
       
     - name: Add GPS Permissions
       run: |
-        MANIFEST="android/app/src/main/AndroidManifest.xml"
-        sed -i '/<application/i \    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-feature android:name="android.hardware.location.gps" />' $MANIFEST
+        MANAFEST="android/app/src/main/AndroidManifest.xml"
+        sed -i '/<application/i \    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-feature android:name="android.hardware.location.gps" />' $MANAFEST
       
     - name: Build APK
       run: |
