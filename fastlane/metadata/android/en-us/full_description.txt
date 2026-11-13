@@ -1,0 +1,47 @@
+Sextant Trainer is a fully offline practice tool for celestial navigation. It reduces sextant sights the same way you would with paper tables, and gives you a training ground for the whole workflow without requiring an internet connection.
+
+FEATURES
+
+• Auto mode — enter your sextant altitude; the app computes Ho, Hc, Zn and the intercept.
+
+• Tables mode — you look up Hc, d and Zn from your printed Pub. 229 (HO 229) tables, and the app does the corrections, the d × ΔDec multiplication, and the intercept. This is the mode for practising paper sight reduction.
+
+• Full manual mode — enter fully corrected Ho, Hc and Zn yourself; the app just plots the fix.
+
+• Running fix — combine two or more sightings of the same body across time. The app advances earlier lines of position along your track and speed, and plots the combined fix.
+
+• Midday zenith-distance fit — fits a parabola to z² versus time across morning and afternoon Sun sightings. Gives true noon time (→ longitude) and latitude, with uncertainty estimates.
+
+• Direct fix — the two-circle intersection solution (Van Allen), independent of the intercept method. A cross-check on the standard technique.
+
+• Pub. 229 second-difference — optional correction for high-accuracy Hc above ~60°.
+
+• Built-in practice almanac — hourly GHA/Dec for the Sun, Moon, Venus, Mars, Jupiter, Saturn, Aries and 30 navigational stars, plus a printable daily-page format.
+
+• Fully offline — no internet connection needed after install. No accounts. No tracking. No data collection.
+
+USING THE APP
+
+For paper-based practice:
+
+1. Set up an assumed position in Setup.
+
+2. Go to Sights, choose Tables mode, and enter Hc, d, and Zn from your Pub. 229 book.
+
+3. The app computes Ho from your Hs, applies the d × ΔDec correction, and shows the intercept.
+
+4. Repeat for another body, tick them in the Sights list, and go to Fix to see the combined position.
+
+The Help panel (the A button in the header) has a labelled sextant diagram, a link to the official Pub. 229 PDFs and the Nautical Almanac, and a glossary of 34 navigation terms.
+
+TABLES AND ALMANAC
+
+The app uses the official Pub. 229 — Sight Reduction Tables for Marine Navigation (also known as HO 229 in the US and NP 401 in the UK). These are US Government publications and are in the public domain. A well-maintained archive of the official PDFs is at thenauticalalmanac.com, which is linked from the in-app Help panel.
+
+ACCURACY
+
+The app's ephemeris is coarser than the printed Nautical Almanac. The Sun is good to about ±0.6′, stars to ±0.3′, the Moon to ±0.3′, and the planets to ±1–2′ (worse for Jupiter and Saturn). When the app and the printed almanac disagree, trust the printed almanac.
+
+This is a practice tool, not a navigation reference standard. Do not rely on it as the sole means of navigation.
+
+The app does not collect, transmit or store any personal data. Everything stays on your device.

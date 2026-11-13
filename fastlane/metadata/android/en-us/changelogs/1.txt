@@ -1,0 +1,9 @@
+Initial release.
+
+• Auto, Tables and Full Manual sight reduction modes
+• Running fix for same-body sightings across time
+• Midday zenith-distance fit with uncertainty estimates
+• Direct fix (two-circle Van Allen solution)
+• Pub. 229 second-difference interpolation
+• Built-in practice almanac
+• Fully offline; no accounts, no tracking

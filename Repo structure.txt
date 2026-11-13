@@ -1,0 +1,21 @@
+sextant-trainer/
+├── index.html
+├── manifest.json
+├── sw.js
+├── Marine_sextant.svg          ← you already have this
+├── README.md
+├── LICENSE                     ← see note below
+└── fastlane/
+    └── metadata/
+        └── android/
+            └── en-US/
+                ├── title.txt
+                ├── short_description.txt
+                ├── full_description.txt
+                ├── changelogs/
+                │   └── 1.txt
+                └── images/
+                    ├── icon.png               ← you provide
+                    └── phoneScreenshots/
+                        ├── 1.png              ← you provide
+                        └── 2.png              ← you provide
